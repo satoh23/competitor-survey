@@ -17,7 +17,7 @@ class MachineLearning:
         zh_dict = self.__create_country_dict(nlp_zh, 'Chinese.txt')
         self.country_dict = {'ja': ja_dict, 'en': en_dict, 'zh': zh_dict}
 
-    def co_occurrence_network(self, cleaned_text_list: list, language: str) -> str:
+    def create_png_of_co_occurrence_network(self, cleaned_text_list: list, language: str) -> str:
         country_info = self.country_dict[language]
         nlp = country_info['nlp']
         
