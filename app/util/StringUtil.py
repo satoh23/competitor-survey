@@ -1,6 +1,11 @@
+import requests
+import json
+
 import emoji
 import re
 import mojimoji
+
+from conf import settings
 
 class StringUtil:
 
@@ -31,3 +36,20 @@ class StringUtil:
         cleaned_text = num_regex.sub('', text)
         
         return cleaned_text
+    
+    def translate_to_ja(self, word_list: list) -> list:
+
+        if (len(word_list) >= 1):
+            url = 'https://api-free.deepl.com/v2/translate'
+            headers = {'Authorization': 'DeepL-Auth-Key {}'.format(settings.auth_key), 'Content-Type': 'application/json'}
+            json_data = {'text': word_list, 'target_lang': 'JA'}
+            response = requests.post(url=url, headers=headers, json=json_data)
+            json_obj = json.loads(response.text)
+
+            translated_word_list = []
+            for translation in json_obj['translations']:
+                translated_word_list.append(translation['text'])
+            
+            return translated_word_list
+
+        return word_list
