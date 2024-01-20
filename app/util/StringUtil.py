@@ -38,7 +38,6 @@ class StringUtil:
         return cleaned_text
     
     def translate_to_ja(self, word_list: list) -> list:
-
         if (len(word_list) >= 1):
             url = 'https://api-free.deepl.com/v2/translate'
             headers = {'Authorization': 'DeepL-Auth-Key {}'.format(settings.auth_key), 'Content-Type': 'application/json'}
