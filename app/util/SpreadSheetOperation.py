@@ -3,6 +3,7 @@ import os.path
 import gspread
 
 from conf import settings
+from type import AppInfo
 
 class SpreadSheetOperation:
 
@@ -30,67 +31,67 @@ class SpreadSheetOperation:
     '''
     セルの値を更新するメソッド
     '''
-    def write_all(self, worksheet_name: str, value_dic: dict):
+    def write_all(self, worksheet_name: str, app: AppInfo):
         try:
             worksheet = self.workbook.worksheet(worksheet_name)
 
             # アプリ名
-            self.__write_with_user_entered(worksheet, 'A1', value_dic['app_name'])
+            self.__write_with_user_entered(worksheet, 'A1', app.name)
             # google driveに格納されたアプリアイコンのid
-            self.__write_with_user_entered(worksheet, 'J1', self.__create_image_url(value_dic['icon_id']))
+            self.__write_with_user_entered(worksheet, 'J1', self.__create_image_url(app.icon_id))
             # アプリがリリースされた日時
-            self.__write_with_user_entered(worksheet, 'B3', value_dic['release_datetime'])
+            self.__write_with_user_entered(worksheet, 'B3', app.release_datetime)
             # ダウンロード時の価格
-            self.__write_with_user_entered(worksheet, 'F3', value_dic['download_price'])
+            self.__write_with_user_entered(worksheet, 'F3', app.download_price)
             # アプリ容量
-            self.__write_with_user_entered(worksheet, 'H3', value_dic['file_size'])
+            self.__write_with_user_entered(worksheet, 'H3', app.file_size)
             # 推定年間売上
-            self.__write_with_user_entered(worksheet, 'B5', value_dic['annual_sales'])
+            self.__write_with_user_entered(worksheet, 'B5', app.annual_sales)
             # ダウンロード数
-            self.__write_with_user_entered(worksheet, 'F5', value_dic['download_count'])
+            self.__write_with_user_entered(worksheet, 'F5', app.download_count)
             # WAU数
-            self.__write_with_user_entered(worksheet, 'H5', value_dic['wau_count'])
+            self.__write_with_user_entered(worksheet, 'H5', app.wau_count)
             # アプリ紹介文
-            self.__write_with_user_entered(worksheet, 'A9', value_dic['description'])
+            self.__write_with_user_entered(worksheet, 'A9', app.description)
             # 課金プラン一覧
-            self.__write_with_user_entered(worksheet, 'J9', value_dic['billings'])
+            self.__write_with_user_entered(worksheet, 'J9', app.billings)
             # アプリ検索に使われるキーワードランキング
-            self.__write_with_user_entered(worksheet, 'F25', value_dic['keyword_ranking'])
+            self.__write_with_user_entered(worksheet, 'F25', app.keyword_ranking)
             # WAUの国籍ランキング
-            self.__write_with_user_entered(worksheet, 'J25', value_dic['wau_nationality_ranking'])
+            self.__write_with_user_entered(worksheet, 'J25', app.wau_nationality_ranking)
             
             # 1カ国目のレビューのnlpの結果
-            self.__write_with_user_entered(worksheet, 'A46', self.__create_image_url(value_dic['coOccurrenceNetwork_result']['1']['good']))
-            self.__write_with_user_entered(worksheet, 'A69', self.__create_image_url(value_dic['coOccurrenceNetwork_result']['1']['normal']))
-            self.__write_with_user_entered(worksheet, 'A92', self.__create_image_url(value_dic['coOccurrenceNetwork_result']['1']['bad']))
-            self.__write_with_user_entered(worksheet, 'A115', self.__create_image_url(value_dic['bagOfWords_result']['1']['good']))
-            self.__write_with_user_entered(worksheet, 'A138', self.__create_image_url(value_dic['bagOfWords_result']['1']['normal']))
-            self.__write_with_user_entered(worksheet, 'A161', self.__create_image_url(value_dic['bagOfWords_result']['1']['bad']))
-            self.__write_with_user_entered(worksheet, 'A184', self.__create_image_url(value_dic['sunburstChart_result']['1']['good']))
-            self.__write_with_user_entered(worksheet, 'A207', self.__create_image_url(value_dic['sunburstChart_result']['1']['normal']))
-            self.__write_with_user_entered(worksheet, 'A230', self.__create_image_url(value_dic['sunburstChart_result']['1']['bad']))
+            self.__write_with_user_entered(worksheet, 'A46', self.__create_image_url(app.coOccurrenceNetwork_result['1']['good']))
+            self.__write_with_user_entered(worksheet, 'A69', self.__create_image_url(app.coOccurrenceNetwork_result['1']['normal']))
+            self.__write_with_user_entered(worksheet, 'A92', self.__create_image_url(app.coOccurrenceNetwork_result['1']['bad']))
+            self.__write_with_user_entered(worksheet, 'A115', self.__create_image_url(app.bagOfWords_result['1']['good']))
+            self.__write_with_user_entered(worksheet, 'A138', self.__create_image_url(app.bagOfWords_result['1']['normal']))
+            self.__write_with_user_entered(worksheet, 'A161', self.__create_image_url(app.bagOfWords_result['1']['bad']))
+            self.__write_with_user_entered(worksheet, 'A184', self.__create_image_url(app.sunburstChart_result['1']['good']))
+            self.__write_with_user_entered(worksheet, 'A207', self.__create_image_url(app.sunburstChart_result['1']['normal']))
+            self.__write_with_user_entered(worksheet, 'A230', self.__create_image_url(app.sunburstChart_result['1']['bad']))
             
             # 2カ国目のレビューのnlpの結果
-            self.__write_with_user_entered(worksheet, 'A253', self.__create_image_url(value_dic['coOccurrenceNetwork_result']['2']['good']))
-            self.__write_with_user_entered(worksheet, 'A276', self.__create_image_url(value_dic['coOccurrenceNetwork_result']['2']['normal']))
-            self.__write_with_user_entered(worksheet, 'A299', self.__create_image_url(value_dic['coOccurrenceNetwork_result']['2']['bad']))
-            self.__write_with_user_entered(worksheet, 'A322', self.__create_image_url(value_dic['bagOfWords_result']['2']['good']))
-            self.__write_with_user_entered(worksheet, 'A345', self.__create_image_url(value_dic['bagOfWords_result']['2']['normal']))
-            self.__write_with_user_entered(worksheet, 'A368', self.__create_image_url(value_dic['bagOfWords_result']['2']['bad']))
-            self.__write_with_user_entered(worksheet, 'A391', self.__create_image_url(value_dic['sunburstChart_result']['2']['good']))
-            self.__write_with_user_entered(worksheet, 'A414', self.__create_image_url(value_dic['sunburstChart_result']['2']['normal']))
-            self.__write_with_user_entered(worksheet, 'A437', self.__create_image_url(value_dic['sunburstChart_result']['2']['bad']))
+            self.__write_with_user_entered(worksheet, 'A253', self.__create_image_url(app.coOccurrenceNetwork_result['2']['good']))
+            self.__write_with_user_entered(worksheet, 'A276', self.__create_image_url(app.coOccurrenceNetwork_result['2']['normal']))
+            self.__write_with_user_entered(worksheet, 'A299', self.__create_image_url(app.coOccurrenceNetwork_result['2']['bad']))
+            self.__write_with_user_entered(worksheet, 'A322', self.__create_image_url(app.bagOfWords_result['2']['good']))
+            self.__write_with_user_entered(worksheet, 'A345', self.__create_image_url(app.bagOfWords_result['2']['normal']))
+            self.__write_with_user_entered(worksheet, 'A368', self.__create_image_url(app.bagOfWords_result['2']['bad']))
+            self.__write_with_user_entered(worksheet, 'A391', self.__create_image_url(app.sunburstChart_result['2']['good']))
+            self.__write_with_user_entered(worksheet, 'A414', self.__create_image_url(app.sunburstChart_result['2']['normal']))
+            self.__write_with_user_entered(worksheet, 'A437', self.__create_image_url(app.sunburstChart_result['2']['bad']))
 
             # 3カ国目のレビューのnlpの結果
-            self.__write_with_user_entered(worksheet, 'A460', self.__create_image_url(value_dic['coOccurrenceNetwork_result']['3']['good']))
-            self.__write_with_user_entered(worksheet, 'A483', self.__create_image_url(value_dic['coOccurrenceNetwork_result']['3']['normal']))
-            self.__write_with_user_entered(worksheet, 'A506', self.__create_image_url(value_dic['coOccurrenceNetwork_result']['3']['bad']))
-            self.__write_with_user_entered(worksheet, 'A529', self.__create_image_url(value_dic['bagOfWords_result']['3']['good']))
-            self.__write_with_user_entered(worksheet, 'A552', self.__create_image_url(value_dic['bagOfWords_result']['3']['normal']))
-            self.__write_with_user_entered(worksheet, 'A575', self.__create_image_url(value_dic['bagOfWords_result']['3']['bad']))
-            self.__write_with_user_entered(worksheet, 'A598', self.__create_image_url(value_dic['sunburstChart_result']['3']['good']))
-            self.__write_with_user_entered(worksheet, 'A621', self.__create_image_url(value_dic['sunburstChart_result']['3']['normal']))
-            self.__write_with_user_entered(worksheet, 'A644', self.__create_image_url(value_dic['sunburstChart_result']['3']['bad']))
+            self.__write_with_user_entered(worksheet, 'A460', self.__create_image_url(app.coOccurrenceNetwork_result['3']['good']))
+            self.__write_with_user_entered(worksheet, 'A483', self.__create_image_url(app.coOccurrenceNetwork_result['3']['normal']))
+            self.__write_with_user_entered(worksheet, 'A506', self.__create_image_url(app.coOccurrenceNetwork_result['3']['bad']))
+            self.__write_with_user_entered(worksheet, 'A529', self.__create_image_url(app.bagOfWords_result['3']['good']))
+            self.__write_with_user_entered(worksheet, 'A552', self.__create_image_url(app.bagOfWords_result['3']['normal']))
+            self.__write_with_user_entered(worksheet, 'A575', self.__create_image_url(app.bagOfWords_result['3']['bad']))
+            self.__write_with_user_entered(worksheet, 'A598', self.__create_image_url(app.sunburstChart_result['3']['good']))
+            self.__write_with_user_entered(worksheet, 'A621', self.__create_image_url(app.sunburstChart_result['3']['normal']))
+            self.__write_with_user_entered(worksheet, 'A644', self.__create_image_url(app.sunburstChart_result['3']['bad']))
 
         except Exception as error:
             print(f"スプレッドシートへの書き込みに失敗しました: {error}")
