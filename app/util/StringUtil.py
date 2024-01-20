@@ -9,7 +9,7 @@ from conf import settings
 
 class StringUtil:
 
-    def cleaning_text(text: str) -> str:
+    def cleaning_text(self, text: str) -> str:
         text = emoji.replace_emoji(text)
         text = text.replace('\n','').replace('\r','')
         text = text.replace('\u3000', '')
