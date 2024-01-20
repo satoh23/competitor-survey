@@ -43,7 +43,7 @@ class GoogleDriveOperation:
         }
         media = MediaFileUpload(
             settings.IMAGES_DIR_PATH + file_name,
-            mimetype=GoogleDriveOperation.__get_mimetype(file_name),
+            mimetype=self.__get_mimetype(file_name),
             resumable=True
         )
         try:
@@ -84,7 +84,7 @@ class GoogleDriveOperation:
     '''
     画像ファイルの拡張子から適切なmimetypeを判定し、返却するメソッド
     '''
-    def __get_mimetype(file_name: str) -> str:
+    def __get_mimetype(self, file_name: str) -> str:
         mimetype_dict = {'jpg': 'image/jpeg', 'png': 'image/png'}
 
         index = file_name.find('.')
