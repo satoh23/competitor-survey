@@ -40,7 +40,7 @@ class StringUtil:
     def translate_to_ja(self, word_list: list) -> list:
         if (len(word_list) >= 1):
             url = 'https://api-free.deepl.com/v2/translate'
-            headers = {'Authorization': 'DeepL-Auth-Key {}'.format(settings.auth_key), 'Content-Type': 'application/json'}
+            headers = {'Authorization': 'DeepL-Auth-Key {}'.format(settings.DEEPL_AUTH_KEY), 'Content-Type': 'application/json'}
             json_data = {'text': word_list, 'target_lang': 'JA'}
             response = requests.post(url=url, headers=headers, json=json_data)
             json_obj = json.loads(response.text)
