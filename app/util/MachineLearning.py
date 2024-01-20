@@ -2,7 +2,9 @@ from conf import settings
 
 class MachineLearning:
     
-    def create_stopwords(self, country: str) -> list:
+
+    
+    def __create_stopwords(self, country: str) -> list:
         stopwords = []
         with open(settings.DIR_PATH_STOPWORDS + country) as file:
             for stopword in file.read().splitlines():
