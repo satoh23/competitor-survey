@@ -54,7 +54,7 @@ class GoogleDriveOperation:
                 fields='id'
             ).execute()
         except HttpError as error:
-            print(f"An error occurred: {error}")
+            print(f"画像のアップロードに失敗しました: {error}")
 
         return result_file.get('id')
 
@@ -77,7 +77,7 @@ class GoogleDriveOperation:
                 body=new_file_body
                 ).execute()
         except HttpError as error:
-            print(f"An error occurred: {error}")
+            print(f"ワークブックの複製に失敗しました: {error}")
 
         return result_file.get('id')
     
