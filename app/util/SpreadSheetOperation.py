@@ -7,7 +7,7 @@ from type import AppInfo
 
 class SpreadSheetOperation:
 
-    def __init__(self, sheet_id: str,) -> None:
+    def __init__(self, sheet_id: str) -> None:
         credentials_filename = 'credentials.json'
         token_filename = 'gspread_token.json'
 
