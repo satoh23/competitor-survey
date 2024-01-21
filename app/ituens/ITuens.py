@@ -9,6 +9,11 @@ class ITuens:
     store_url_template = 'https://apps.apple.com/{}/app/id{}'
     ituens_api_url_template = 'https://itunes.apple.com/lookup?id={}&country={}'
 
+
+    '''
+    課金プラン一覧を取得する
+    取得できない場合はNoneを返す
+    '''
     def getBillingsOrNone(self, country: str, id: int) -> str:
         url = self.store_url_template.format(country, id)  
         response = requests.get(url)
@@ -27,9 +32,19 @@ class ITuens:
         return billings
     
 
+    '''
+    紹介文を取得する
+    '''
     def getDescription(self, country: str, id: int) -> str:
         url = self.ituens_api_url_template.format(id, country)
         response = requests.get(url)
         result = json.loads(response.text)['results'][0]
         
         return result['description']
+
+    '''
+    該当アプリのiTuensストアでの推定ダウンロード数を取得する
+    iTuensはダウンロード数を取得できないため、Google Playでの同アプリのダウンロード数から推定を行う
+    '''
+    def getEstimatedDownloadCount(self, download_count: str) -> int:
+        return round(int(download_count) * 0.33)
