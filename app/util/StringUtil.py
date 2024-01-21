@@ -9,6 +9,9 @@ from conf import settings
 
 class StringUtil:
 
+    '''
+    テキストからnlpに不要な記号や文字を除去する関数
+    '''
     def cleaning_text(self, text: str) -> str:
         text = emoji.replace_emoji(text)
         text = text.replace('\n','').replace('\r','')
@@ -37,6 +40,9 @@ class StringUtil:
         
         return cleaned_text
     
+    '''
+    Deepl APIを使って外国語を日本語に変換する関数
+    '''
     def translate_to_ja(self, word_list: list) -> list:
         if (len(word_list) >= 1):
             url = 'https://api-free.deepl.com/v2/translate'

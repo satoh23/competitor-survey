@@ -22,6 +22,9 @@ class MachineLearning:
         
         self.country_dict = {'ja': ja_dict, 'en': en_dict, 'zh': zh_dict}
 
+    '''
+    前処理後のデータフレームを返却する関数
+    '''
     def create_data_frame_after_nlp(self, cleaned_text_list: list, language: str):
         country_info = self.country_dict[language]
         nlp = country_info['nlp']
@@ -46,6 +49,9 @@ class MachineLearning:
 
         return data_frame
 
+    '''
+    BOWを作成し、pngで保存する関数
+    '''
     def create_png_of_bagOfWords(self, data_frame, language: str, app_name: str) -> str:
         word_list = []
         for words_list in data_frame['SEP_WORD']:
@@ -63,7 +69,9 @@ class MachineLearning:
 
         return file_name
 
-
+    '''
+    サンバーストチャートを作成し、pngで保存する関数
+    '''
     def create_png_of_sunburstChart(self, data_frame, language: str, app_name: str) -> str:
         npt = nlplot.NLPlot(data_frame, target_col='SEP_WORD')
         npt_stopwords = npt.get_stopword(top_n=2, min_freq=0)
@@ -83,6 +91,9 @@ class MachineLearning:
 
         return file_name
 
+    '''
+    共起ネットワークを作成し、pngで保存する関数
+    '''
     def create_png_of_coOccurrenceNetwork(self, data_frame, language: str, app_name: str) -> str:
         npt = nlplot.NLPlot(data_frame, target_col='SEP_WORD')
         npt.build_graph(min_edge_frequency=5)
@@ -102,6 +113,9 @@ class MachineLearning:
 
         return file_name
 
+    '''
+    ストップワード一覧を作成する関数
+    '''
     def __create_stopwords(self, country: str) -> list:
         stopwords = []
         with open(settings.DIR_PATH_STOPWORDS + country) as file:
@@ -109,5 +123,8 @@ class MachineLearning:
                 stopwords.append(stopword)
         return stopwords
     
+    '''
+    自然言語処理用のモデルとストップワード一覧のファイル名を格納した辞書を作成する関数
+    '''
     def __create_country_dict(self, nlp, file_name) -> dict:
         return {'nlp': nlp, 'stopwords_file': file_name}
