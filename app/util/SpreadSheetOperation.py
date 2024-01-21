@@ -34,11 +34,12 @@ class SpreadSheetOperation:
     def write_all(self, worksheet_name: str, app: AppInfo):
         try:
             worksheet = self.workbook.worksheet(worksheet_name)
+            image_url_template = '=image("https://lh3.googleusercontent.com/d/{}")'
 
             # アプリ名
             self.__write_with_user_entered(worksheet, 'A1', app.name)
             # google driveに格納されたアプリアイコンのid
-            self.__write_with_user_entered(worksheet, 'J1', self.__create_image_url(app.icon_id))
+            self.__write_with_user_entered(worksheet, 'J1', image_url_template.format(app.icon_id))
             # アプリがリリースされた日時
             self.__write_with_user_entered(worksheet, 'B3', app.release_datetime)
             # ダウンロード時の価格
@@ -61,44 +62,44 @@ class SpreadSheetOperation:
             self.__write_with_user_entered(worksheet, 'J25', app.wau_nationality_ranking)
             
             # 1カ国目のレビューのnlpの結果
-            self.__write_with_user_entered(worksheet, 'A46', self.__create_image_url(app.coOccurrenceNetwork_result['1']['good']))
-            self.__write_with_user_entered(worksheet, 'A69', self.__create_image_url(app.coOccurrenceNetwork_result['1']['normal']))
-            self.__write_with_user_entered(worksheet, 'A92', self.__create_image_url(app.coOccurrenceNetwork_result['1']['bad']))
-            self.__write_with_user_entered(worksheet, 'A115', self.__create_image_url(app.bagOfWords_result['1']['good']))
-            self.__write_with_user_entered(worksheet, 'A138', self.__create_image_url(app.bagOfWords_result['1']['normal']))
-            self.__write_with_user_entered(worksheet, 'A161', self.__create_image_url(app.bagOfWords_result['1']['bad']))
-            self.__write_with_user_entered(worksheet, 'A184', self.__create_image_url(app.sunburstChart_result['1']['good']))
-            self.__write_with_user_entered(worksheet, 'A207', self.__create_image_url(app.sunburstChart_result['1']['normal']))
-            self.__write_with_user_entered(worksheet, 'A230', self.__create_image_url(app.sunburstChart_result['1']['bad']))
+            self.__write_with_user_entered(worksheet, 'A46', image_url_template.format(app.coOccurrenceNetwork_result['1']['good']))
+            self.__write_with_user_entered(worksheet, 'A69', image_url_template.format(app.coOccurrenceNetwork_result['1']['normal']))
+            self.__write_with_user_entered(worksheet, 'A92', image_url_template.format(app.coOccurrenceNetwork_result['1']['bad']))
+            self.__write_with_user_entered(worksheet, 'A115', image_url_template.format(app.bagOfWords_result['1']['good']))
+            self.__write_with_user_entered(worksheet, 'A138', image_url_template.format(app.bagOfWords_result['1']['normal']))
+            self.__write_with_user_entered(worksheet, 'A161', image_url_template.format(app.bagOfWords_result['1']['bad']))
+            self.__write_with_user_entered(worksheet, 'A184', image_url_template.format(app.sunburstChart_result['1']['good']))
+            self.__write_with_user_entered(worksheet, 'A207', image_url_template.format(app.sunburstChart_result['1']['normal']))
+            self.__write_with_user_entered(worksheet, 'A230', image_url_template.format(app.sunburstChart_result['1']['bad']))
             
             # 2カ国目のレビューのnlpの結果
-            self.__write_with_user_entered(worksheet, 'A253', self.__create_image_url(app.coOccurrenceNetwork_result['2']['good']))
-            self.__write_with_user_entered(worksheet, 'A276', self.__create_image_url(app.coOccurrenceNetwork_result['2']['normal']))
-            self.__write_with_user_entered(worksheet, 'A299', self.__create_image_url(app.coOccurrenceNetwork_result['2']['bad']))
-            self.__write_with_user_entered(worksheet, 'A322', self.__create_image_url(app.bagOfWords_result['2']['good']))
-            self.__write_with_user_entered(worksheet, 'A345', self.__create_image_url(app.bagOfWords_result['2']['normal']))
-            self.__write_with_user_entered(worksheet, 'A368', self.__create_image_url(app.bagOfWords_result['2']['bad']))
-            self.__write_with_user_entered(worksheet, 'A391', self.__create_image_url(app.sunburstChart_result['2']['good']))
-            self.__write_with_user_entered(worksheet, 'A414', self.__create_image_url(app.sunburstChart_result['2']['normal']))
-            self.__write_with_user_entered(worksheet, 'A437', self.__create_image_url(app.sunburstChart_result['2']['bad']))
+            self.__write_with_user_entered(worksheet, 'A253', image_url_template.format(app.coOccurrenceNetwork_result['2']['good']))
+            self.__write_with_user_entered(worksheet, 'A276', image_url_template.format(app.coOccurrenceNetwork_result['2']['normal']))
+            self.__write_with_user_entered(worksheet, 'A299', image_url_template.format(app.coOccurrenceNetwork_result['2']['bad']))
+            self.__write_with_user_entered(worksheet, 'A322', image_url_template.format(app.bagOfWords_result['2']['good']))
+            self.__write_with_user_entered(worksheet, 'A345', image_url_template.format(app.bagOfWords_result['2']['normal']))
+            self.__write_with_user_entered(worksheet, 'A368', image_url_template.format(app.bagOfWords_result['2']['bad']))
+            self.__write_with_user_entered(worksheet, 'A391', image_url_template.format(app.sunburstChart_result['2']['good']))
+            self.__write_with_user_entered(worksheet, 'A414', image_url_template.format(app.sunburstChart_result['2']['normal']))
+            self.__write_with_user_entered(worksheet, 'A437', image_url_template.format(app.sunburstChart_result['2']['bad']))
 
             # 3カ国目のレビューのnlpの結果
-            self.__write_with_user_entered(worksheet, 'A460', self.__create_image_url(app.coOccurrenceNetwork_result['3']['good']))
-            self.__write_with_user_entered(worksheet, 'A483', self.__create_image_url(app.coOccurrenceNetwork_result['3']['normal']))
-            self.__write_with_user_entered(worksheet, 'A506', self.__create_image_url(app.coOccurrenceNetwork_result['3']['bad']))
-            self.__write_with_user_entered(worksheet, 'A529', self.__create_image_url(app.bagOfWords_result['3']['good']))
-            self.__write_with_user_entered(worksheet, 'A552', self.__create_image_url(app.bagOfWords_result['3']['normal']))
-            self.__write_with_user_entered(worksheet, 'A575', self.__create_image_url(app.bagOfWords_result['3']['bad']))
-            self.__write_with_user_entered(worksheet, 'A598', self.__create_image_url(app.sunburstChart_result['3']['good']))
-            self.__write_with_user_entered(worksheet, 'A621', self.__create_image_url(app.sunburstChart_result['3']['normal']))
-            self.__write_with_user_entered(worksheet, 'A644', self.__create_image_url(app.sunburstChart_result['3']['bad']))
+            self.__write_with_user_entered(worksheet, 'A460', image_url_template.format(app.coOccurrenceNetwork_result['3']['good']))
+            self.__write_with_user_entered(worksheet, 'A483', image_url_template.format(app.coOccurrenceNetwork_result['3']['normal']))
+            self.__write_with_user_entered(worksheet, 'A506', image_url_template.format(app.coOccurrenceNetwork_result['3']['bad']))
+            self.__write_with_user_entered(worksheet, 'A529', image_url_template.format(app.bagOfWords_result['3']['good']))
+            self.__write_with_user_entered(worksheet, 'A552', image_url_template.format(app.bagOfWords_result['3']['normal']))
+            self.__write_with_user_entered(worksheet, 'A575', image_url_template.format(app.bagOfWords_result['3']['bad']))
+            self.__write_with_user_entered(worksheet, 'A598', image_url_template.format(app.sunburstChart_result['3']['good']))
+            self.__write_with_user_entered(worksheet, 'A621', image_url_template.format(app.sunburstChart_result['3']['normal']))
+            self.__write_with_user_entered(worksheet, 'A644', image_url_template.format(app.sunburstChart_result['3']['bad']))
 
         except Exception as error:
             print(f"スプレッドシートへの書き込みに失敗しました: {error}")
     
-    def __create_image_url(self, parameter: str) -> str:
-        return '=image("https://lh3.googleusercontent.com/d/{}")'.format(parameter)
-    
+    '''
+    value_input_option=USER_ENTEREDでワークシートに値を書き込む関数
+    '''
     def __write_with_user_entered(self, worksheet, range_name: str, values: str):
         try:
             worksheet.update(range_name=range_name, values=values, value_input_option='USER_ENTERED')
