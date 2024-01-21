@@ -48,3 +48,13 @@ class ITuens:
     '''
     def getEstimatedDownloadCount(self, download_count: str) -> int:
         return round(int(download_count) * 0.33)
+
+    '''
+    アプリ容量を取得する
+    '''
+    def getFileSize(self, country: str, id: int):
+        url = self.ituens_api_url_template.format(id, country)
+        response = requests.get(url)
+        json_obj = json.loads(response.text)
+        file_size = int(json_obj['results'][0]['fileSizeBytes']) / 1024 / 1024
+        return str(round(file_size)) + 'MB'
