@@ -9,7 +9,6 @@ class ITuens:
     store_url_template = 'https://apps.apple.com/{}/app/id{}'
     ituens_api_url_template = 'https://itunes.apple.com/lookup?id={}&country={}'
 
-
     '''
     課金プラン一覧を取得する
     取得できない場合はNoneを返す
@@ -31,7 +30,6 @@ class ITuens:
     
         return billings
     
-
     '''
     紹介文を取得する
     '''
@@ -58,3 +56,28 @@ class ITuens:
         json_obj = json.loads(response.text)
         file_size = int(json_obj['results'][0]['fileSizeBytes']) / 1024 / 1024
         return str(round(file_size)) + 'MB'
+
+    '''
+    アプリのアイコンを取得する
+    取得できなければNoneを返す
+    '''
+    def getIconImageOrNone(self, app_name: str, country: str, id: int):
+        url = self.ituens_api_url_template.format(id, country)
+        response = requests.get(url)
+        result = json.loads(response.text)['results'][0]
+
+        icon_url = None
+        # 512,100,60はそれぞれ画像のサイズのことだと思う
+        if (len(result['artworkUrl512']) > 0):
+            icon_url = result['artworkUrl512']
+        elif (len(result['artworkUrl100']) > 0):
+            icon_url = result['artworkUrl100']
+        elif (len(result['artworkUrl60']) > 0):
+            icon_url = result['artworkUrl60']
+        else:
+            print('アイコンの画像が取得できませんでした')
+            return None
+
+        icon = requests.get(icon_url)
+        with open('../images/{}'.format(app_name + '_ituens'), 'wb') as file:
+            file.write(icon.content)
