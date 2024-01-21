@@ -6,6 +6,8 @@ import pandas as pd
 import nlplot
 import plotly.io as pio
 
+from wordcloud import WordCloud
+
 class MachineLearning:
     
     path_of_images_dir = '../images/'
@@ -44,12 +46,30 @@ class MachineLearning:
 
         return data_frame
 
-    def create_png_of_sunburst_chart(self, data_frame, language: str) -> str:
+    def create_png_of_bagOfWords(self, data_frame, language: str, app_name: str) -> str:
+        word_list = []
+        for words_list in data_frame['SEP_WORD']:
+            for word in words_list:
+                word_list.append(word)
+        
+        stop_words = self.__create_stopwords(self.country_dict[language]['stopwords_file'])
+        wordcloud = WordCloud(background_color='white',
+                              width=1920,
+                              height=1080,
+                              font_path='/System/Library/Fonts/ヒラギノ丸ゴ ProN W4.ttc',
+                              stopwords=set(stop_words)).generate(' '.join(word_list))        
+        file_name = 'bagOfWords_' + language + '_' + app_name + '.png'
+        wordcloud.to_file(self.path_of_images_dir + file_name)
+
+        return file_name
+
+
+    def create_png_of_sunburstChart(self, data_frame, language: str, app_name: str) -> str:
         npt = nlplot.NLPlot(data_frame, target_col='SEP_WORD')
         npt_stopwords = npt.get_stopword(top_n=2, min_freq=0)
         npt.build_graph(stopwords=npt_stopwords, min_edge_frequency=5)
 
-        title = 'Sunburst_chart_' + language
+        title = 'Sunburst_chart_' + language + '_' + app_name
         fig_sunburst = npt.sunburst(
             title=title,
             colorscale=True,
@@ -57,18 +77,17 @@ class MachineLearning:
             width=1000,
             height=800,
         )
-
         file_name = title + '.png'
         # 画像保存
         pio.write_image(fig_sunburst, self.path_of_images_dir + file_name, engine='kaleido')
 
         return file_name
 
-    def create_png_of_co_occurrence_network(self, data_frame, language: str) -> str:
+    def create_png_of_coOccurrenceNetwork(self, data_frame, language: str, app_name: str) -> str:
         npt = nlplot.NLPlot(data_frame, target_col='SEP_WORD')
         npt.build_graph(min_edge_frequency=5)
 
-        title = 'Co-occurrence_network_' + language
+        title = 'Co-occurrence_network_' + language + '_' + app_name
         fig_co_network = npt.co_network(
             title=title,
             sizing=100,
@@ -77,7 +96,6 @@ class MachineLearning:
             width=1920,
             height=1080,
         )
-
         file_name = title + '.png'
         # 画像保存
         pio.write_image(fig_co_network, self.path_of_images_dir + file_name, engine='kaleido')
