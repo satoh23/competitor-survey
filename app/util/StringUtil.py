@@ -42,6 +42,7 @@ class StringUtil:
             url = 'https://api-free.deepl.com/v2/translate'
             headers = {'Authorization': 'DeepL-Auth-Key {}'.format(settings.DEEPL_AUTH_KEY), 'Content-Type': 'application/json'}
             json_data = {'text': word_list, 'target_lang': 'JA'}
+            
             response = requests.post(url=url, headers=headers, json=json_data)
             json_obj = json.loads(response.text)
 
