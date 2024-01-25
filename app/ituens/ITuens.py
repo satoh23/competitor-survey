@@ -130,3 +130,12 @@ class ITuens:
         response = requests.get(url)
         
         return json.loads(response.text)['results'][0]['formattedPrice']
+
+    '''
+    アプリがリリースされた日時を返す
+    '''
+    def getReleaseDay(self, country: str, id: int) -> str:
+        url = self.ituens_api_url_template.format(id, country)
+        response = requests.get(url)
+
+        return json.loads(response.text)['results'][0]['releaseDate']
