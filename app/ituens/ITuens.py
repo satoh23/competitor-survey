@@ -120,3 +120,13 @@ class ITuens:
             driver.quit()
         
         return result
+
+    '''
+    アプリダウンロード時の価格をStringで返す
+    0円の場合は「無料」と返す
+    '''
+    def getPrice(self, country: str, id: int) -> str:
+        url = self.ituens_api_url_template.format(id, country)
+        response = requests.get(url)
+        
+        return json.loads(response.text)['results'][0]['formattedPrice']
