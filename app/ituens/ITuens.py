@@ -20,6 +20,10 @@ class ITuens:
     store_url_template = 'https://apps.apple.com/{}/app/id{}'
     ituens_api_url_template = 'https://itunes.apple.com/lookup?id={}&country={}'
 
+    def __init__(self):
+        self.chrome_service = fs.Service(executable_path=settings.CHROMEDRIVER)
+        self.driver = webdriver.Chrome(service=self.chrome_service)
+
     '''
     課金プラン一覧を取得する
     取得できない場合はNoneを返す
@@ -100,16 +104,13 @@ class ITuens:
     アプリのユーザーの国籍ランキングを返す
     '''
     def getNationalityRankingOrEmpty(self, url: str) -> str:
-        chrome_service = fs.Service(executable_path=settings.CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
-
         try:
-            driver.get(url)
+            self.driver.get(url)
             
             sleep(1)
             result_list = []
             for i in range(1,5):
-                element = driver.find_element(By.CSS_SELECTOR, '#users-country > div > div.right > ul > li:nth-child({})'.format(i))
+                element = self.driver.find_element(By.CSS_SELECTOR, '#users-country > div > div.right > ul > li:nth-child({})'.format(i))
                 text = element.text.replace('\nアクティブユーザー\n', ':')
                 colon_index = text.find(':')
                 result_list.append(text[:colon_index])
@@ -121,7 +122,7 @@ class ITuens:
         else:
             result = '\n'.join(result_list)
         finally:
-            driver.quit()
+            self.driver.quit()
         
         return result
 
@@ -176,3 +177,58 @@ class ITuens:
 
         return reviews
     
+    def getSearchKeywordRanking(self, url:str):
+        country_codes = ['US', 'GB', 'JP', 'KR']
+        # country_codes = []
+        keyword_ranking = {}
+        try:
+            for country_code in country_codes:
+                country_dict = {}
+                # ループごとにドライバーを作り直す必要がある
+                driver = webdriver.Chrome(service=self.chrome_service)
+                driver.get(url + '?keyword_country={}'.format(country_code))
+                sleep(1)
+                
+                for i in range(1, 5):
+                    keyword_info_dict = {}
+
+                    element = driver.find_element(By.CSS_SELECTOR, '#app-ranked > div.inside.no-padding > div.ranked-graph > ul > li:nth-child({})'.format(i))
+                    keyword_info_list = element.text.split('\n')
+                    
+                    index = keyword_info_list[0].find(' #')
+                    keyword_info_dict['keyword'] = keyword_info_list[0][:index]
+                    keyword_info_dict['ratio'] = keyword_info_list[2]
+                    
+                    country_dict[i] = keyword_info_dict
+                
+                driver.quit()
+                keyword_ranking[country_code] = country_dict
+        except NoSuchElementException:
+            print('要素が取得できませんでした')
+
+        # TODO 変更が必要になった時に大変なのでなんとかしたい
+        return 'US\n'\
+                '--------------\n'\
+                '{} {}\n'.format(keyword_ranking['US'][1]['keyword'], keyword_ranking['US'][1]['ratio']) + \
+                '{} {}\n'.format(keyword_ranking['US'][2]['keyword'], keyword_ranking['US'][2]['ratio']) + \
+                '{} {}\n'.format(keyword_ranking['US'][3]['keyword'], keyword_ranking['US'][3]['ratio']) + \
+                '{} {}\n\n'.format(keyword_ranking['US'][4]['keyword'], keyword_ranking['US'][4]['ratio']) + \
+                'JP\n'\
+                '--------------\n'\
+                '{} {}\n'.format(keyword_ranking['JP'][1]['keyword'], keyword_ranking['JP'][1]['ratio']) + \
+                '{} {}\n'.format(keyword_ranking['JP'][2]['keyword'], keyword_ranking['JP'][2]['ratio']) + \
+                '{} {}\n'.format(keyword_ranking['JP'][3]['keyword'], keyword_ranking['JP'][3]['ratio']) + \
+                '{} {}\n\n'.format(keyword_ranking['JP'][4]['keyword'], keyword_ranking['JP'][4]['ratio']) + \
+                'GB\n'\
+                '--------------\n'\
+                '{} {}\n'.format(keyword_ranking['GB'][1]['keyword'], keyword_ranking['GB'][1]['ratio']) + \
+                '{} {}\n'.format(keyword_ranking['GB'][2]['keyword'], keyword_ranking['GB'][2]['ratio']) + \
+                '{} {}\n'.format(keyword_ranking['GB'][3]['keyword'], keyword_ranking['GB'][3]['ratio']) + \
+                '{} {}\n\n'.format(keyword_ranking['GB'][4]['keyword'], keyword_ranking['GB'][4]['ratio']) + \
+                'KR\n'\
+                '--------------\n'\
+                '{} {}\n'.format(keyword_ranking['KR'][1]['keyword'], keyword_ranking['KR'][1]['ratio']) + \
+                '{} {}\n'.format(keyword_ranking['KR'][2]['keyword'], keyword_ranking['KR'][2]['ratio']) + \
+                '{} {}\n'.format(keyword_ranking['KR'][3]['keyword'], keyword_ranking['KR'][3]['ratio']) + \
+                '{} {}\n\n'.format(keyword_ranking['KR'][4]['keyword'], keyword_ranking['KR'][4]['ratio'])
+                
