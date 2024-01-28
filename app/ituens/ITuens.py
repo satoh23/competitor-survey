@@ -1,3 +1,6 @@
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 import requests
 import json
 from time import sleep
@@ -10,6 +13,7 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 
 from conf import settings
+from type.Reviews import Reviews
 
 class ITuens:
     
@@ -139,3 +143,36 @@ class ITuens:
         response = requests.get(url)
 
         return json.loads(response.text)['results'][0]['releaseDate']
+
+    '''
+    アプリのレビューを500件取得する
+    外部apiの仕様上500件までしか取得できない
+    '''
+    def getReviews(self, country: str, id: int) -> Reviews:
+        reviews = Reviews()
+
+        page_num = 1
+        while True:
+            url = 'https://itunes.apple.com/{}/rss/customerreviews/page={}/id={}/json'.format(country, page_num, id)
+            response = requests.get(url)
+            if response:
+                json_obj = json.loads(response.text)
+                entry_list = json_obj['feed']['entry']
+
+                for obj in entry_list:
+                    rate = int(obj['im:rating']['label'])  # レビューの星の数
+                    review = obj['content']['label']
+
+                    if rate >= 4:
+                        reviews.good_review_list.append(review)
+                    elif rate == 3:
+                        reviews.normal_review_list.append(review)
+                    elif rate <= 2:
+                        reviews.bad_review_list.append(review)
+                page_num += 1
+            else:
+                print('レビューが取得できませんでした。page_num={}'.format(page_num))
+                break
+
+        return reviews
+    
