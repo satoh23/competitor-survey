@@ -177,6 +177,9 @@ class ITuens:
 
         return reviews
     
+    '''
+    アプリ検索時に使用されるキーワードランキングを取得する
+    '''
     def getSearchKeywordRanking(self, url:str):
         country_codes = ['US', 'GB', 'JP', 'KR']
         keyword_ranking = {}
