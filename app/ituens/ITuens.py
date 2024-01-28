@@ -179,7 +179,6 @@ class ITuens:
     
     def getSearchKeywordRanking(self, url:str):
         country_codes = ['US', 'GB', 'JP', 'KR']
-        # country_codes = []
         keyword_ranking = {}
         try:
             for country_code in country_codes:
