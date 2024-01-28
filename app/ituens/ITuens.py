@@ -22,7 +22,6 @@ class ITuens:
 
     def __init__(self):
         self.chrome_service = fs.Service(executable_path=settings.CHROMEDRIVER)
-        self.driver = webdriver.Chrome(service=self.chrome_service)
 
     '''
     課金プラン一覧を取得する
@@ -105,12 +104,13 @@ class ITuens:
     '''
     def getNationalityRankingOrEmpty(self, url: str) -> str:
         try:
-            self.driver.get(url)
+            driver = webdriver.Chrome(service=self.chrome_service)
+            driver.get(url)
             
             sleep(1)
             result_list = []
             for i in range(1,5):
-                element = self.driver.find_element(By.CSS_SELECTOR, '#users-country > div > div.right > ul > li:nth-child({})'.format(i))
+                element = driver.find_element(By.CSS_SELECTOR, '#users-country > div > div.right > ul > li:nth-child({})'.format(i))
                 text = element.text.replace('\nアクティブユーザー\n', ':')
                 colon_index = text.find(':')
                 result_list.append(text[:colon_index])
@@ -122,7 +122,7 @@ class ITuens:
         else:
             result = '\n'.join(result_list)
         finally:
-            self.driver.quit()
+            driver.quit()
         
         return result
 
@@ -180,7 +180,7 @@ class ITuens:
     '''
     アプリ検索時に使用されるキーワードランキングを取得する
     '''
-    def getSearchKeywordRanking(self, url:str):
+    def getSearchKeywordRanking(self, url:str) -> str:
         country_codes = ['US', 'GB', 'JP', 'KR']
         keyword_ranking = {}
         try:
@@ -233,4 +233,24 @@ class ITuens:
                 '{} {}\n'.format(keyword_ranking['KR'][2]['keyword'], keyword_ranking['KR'][2]['ratio']) + \
                 '{} {}\n'.format(keyword_ranking['KR'][3]['keyword'], keyword_ranking['KR'][3]['ratio']) + \
                 '{} {}\n\n'.format(keyword_ranking['KR'][4]['keyword'], keyword_ranking['KR'][4]['ratio'])
-                
+
+    '''
+    WAUを取得する
+    '''                
+    def getWAU(self, url: str, google_download_count: int) -> str:
+        try:
+            driver = webdriver.Chrome(service=self.chrome_service)
+            driver.get(url)
+            sleep(1)
+            element = driver.find_element(By.CSS_SELECTOR, '#app-hero > div > div.app-stats > div > div.stats-left > ul > li:nth-child(3) > span.bottom')
+        except NoSuchElementException:
+            print('要素が取得できませんでした')
+            print('代わりにフェルミ推定を用いて算出します')
+            wau = round(google_download_count * 0.0577) / 1000000
+            wau = '推定：' + str(wau) + 'M'
+        else:
+            index = element.text.find(' ')
+            wau = element.text[:index]
+        finally:
+            driver.quit()
+            return wau
